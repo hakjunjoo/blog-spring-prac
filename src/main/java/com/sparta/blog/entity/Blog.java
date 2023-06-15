@@ -5,12 +5,15 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.sql.Timestamp;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "blog")
-public class Blog {
+public class Blog extends com.sparta.memo.entity.Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
