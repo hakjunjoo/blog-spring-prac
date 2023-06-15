@@ -5,8 +5,10 @@ import com.sparta.blog.dto.BlogResponseDto;
 import com.sparta.blog.entity.Blog;
 import com.sparta.blog.repository.BlogRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Service
 public class BlogService {
     private final BlogRepository blogRepository;
@@ -30,31 +32,49 @@ public class BlogService {
 
     public List<BlogResponseDto> getMemos() {
         // DB 조회
-        return blogRepository.findAll();
+        return blogRepository.findAll().stream().map(BlogResponseDto::new).toList();
     }
-
+    @Transactional
     public Long updateBlog(Long id, BlogRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
-        Blog blog = blogRepository.findById(id);
-        if (blog != null) {
-            // blog 내용 수정
-            blogRepository.update(id, requestDto);
-            return id;
+        Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
+
+        // blog 내용 수정
+        if(blog != null) {
+            blog.update(requestDto);
         } else {
-            throw new IllegalArgumentException("선택하신 게시글은 존재하지 않거나 입력하신 비밀번호가 틀렸습니다.");
+            throw new IllegalArgumentException("해당 게시글이 존재하지 않거나 비밀번호가 틀렸습니다.");
         }
+
+        return id;
     }
 
     public Long deleteBlog(Long id, BlogRequestDto requestDto) {
-        Blog blog = blogRepository.findById(id);
+//        Blog blog = findBlog(id);
+        Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
         if(blog != null) {
             // blog 삭제
-            blogRepository.delete(id, requestDto);
-            return id;
+            blogRepository.delete(blog);
         } else {
-            throw new IllegalArgumentException("선택하신 게시글은 존재하지 않거나 입력하신 비밀번호가 틀렸습니다.");
+            throw new IllegalArgumentException("해당 게시글이 존재하지 않거나 비밀번호가 틀렸습니다.");
         }
+        return id;
     }
 
+//    public Long deleteBlog(Long id, String password) {
+////        Blog blog = findBlog(id);
+//        Blog blog = blogRepository.findByPasswordAndId(password, id);
+//        if(blog != null) {
+//            // blog 삭제
+//            blogRepository.delete(blog);
+//        } else {
+//            throw new IllegalArgumentException("해당 게시글이 존재하지 않거나 비밀번호가 틀렸습니다.");
+//        }
+//        return id;
+//    }
+
+//    private Blog findBlog(Long id) {
+//        return blogRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("선택한 게시글은 존재하지 않습니다."));
+//    }
 
 }
