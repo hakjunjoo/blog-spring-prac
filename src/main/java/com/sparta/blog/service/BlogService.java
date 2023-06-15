@@ -4,15 +4,15 @@ import com.sparta.blog.dto.BlogRequestDto;
 import com.sparta.blog.dto.BlogResponseDto;
 import com.sparta.blog.entity.Blog;
 import com.sparta.blog.repository.BlogRepository;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class BlogService {
-    private final JdbcTemplate jdbcTemplate;
+    private final BlogRepository blogRepository;
 
-    public BlogService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public BlogService(BlogRepository blogRepository) {
+        this.blogRepository = blogRepository;
     }
 
     public BlogResponseDto createBlog(BlogRequestDto requestDto) {
@@ -20,7 +20,6 @@ public class BlogService {
         Blog blog = new Blog(requestDto);
 
         //DB 저장
-        BlogRepository blogRepository = new BlogRepository(jdbcTemplate);
         Blog saveBlog = blogRepository.save(blog);
 
         // Entity => ResponseDto
@@ -31,13 +30,10 @@ public class BlogService {
 
     public List<BlogResponseDto> getMemos() {
         // DB 조회
-        BlogRepository blogRepository = new BlogRepository(jdbcTemplate);
         return blogRepository.findAll();
     }
 
     public Long updateBlog(Long id, BlogRequestDto requestDto) {
-        BlogRepository blogRepository = new BlogRepository(jdbcTemplate);
-
         // 해당 메모가 DB에 존재하는지 확인
         Blog blog = blogRepository.findById(id);
         if (blog != null) {
@@ -50,8 +46,6 @@ public class BlogService {
     }
 
     public Long deleteBlog(Long id, BlogRequestDto requestDto) {
-        BlogRepository blogRepository = new BlogRepository(jdbcTemplate);
-
         Blog blog = blogRepository.findById(id);
         if(blog != null) {
             // blog 삭제
