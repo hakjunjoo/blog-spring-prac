@@ -16,4 +16,11 @@ public class BlogResponseDto {
         this.author = blog.getAuthor();
         this.contents = blog.getContents();
     }
+
+    public BlogResponseDto(Long id, String title, String author, String contents) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.contents = contents;
+    }
 }
