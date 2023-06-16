@@ -3,10 +3,10 @@ package com.sparta.blog.dto;
 import lombok.Getter;
 
 @Getter
-public class SuccessDto {
+public class DeletedResponseDto {
     private boolean success;
 
-    public SuccessDto(boolean success) {
+    public DeletedResponseDto(boolean success) {
         this.success = success;
     }
 }

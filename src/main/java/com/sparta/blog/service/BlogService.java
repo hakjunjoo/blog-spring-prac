@@ -2,7 +2,7 @@ package com.sparta.blog.service;
 
 import com.sparta.blog.dto.BlogRequestDto;
 import com.sparta.blog.dto.BlogResponseDto;
-import com.sparta.blog.dto.SuccessDto;
+import com.sparta.blog.dto.DeletedResponseDto;
 import com.sparta.blog.entity.Blog;
 import com.sparta.blog.repository.BlogRepository;
 import org.springframework.stereotype.Service;
@@ -59,7 +59,7 @@ public class BlogService {
         return new BlogResponseDto(blog);
     }
 
-    public SuccessDto deleteBlog(Long id, BlogRequestDto requestDto) {
+    public DeletedResponseDto deleteBlog(Long id, BlogRequestDto requestDto) {
         Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
         boolean success;
         if(blog != null) {
@@ -70,40 +70,8 @@ public class BlogService {
             success = false;
         }
 
-        return new SuccessDto(success);
+        return new DeletedResponseDto(success);
         //status code를 반환하는 것이 일반적인 경우가 많다.
     }
-
-
-//    public Long deleteBlog(Long id, BlogRequestDto requestDto) {
-////        Blog blog = findBlog(id);
-//        Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
-//        if(blog != null) {
-//            // blog 삭제
-//            blogRepository.delete(blog);
-//        } else {
-//            throw new IllegalArgumentException("해당 게시글이 존재하지 않거나 비밀번호가 틀렸습니다.");
-//        }
-//        //status code를 반환하는 것이 일반적인 경우가 많다.
-//        return id;
-//    }
-
-
-
-//    public Long deleteBlog(Long id, String password) {
-////        Blog blog = findBlog(id);
-//        Blog blog = blogRepository.findByPasswordAndId(password, id);
-//        if(blog != null) {
-//            // blog 삭제
-//            blogRepository.delete(blog);
-//        } else {
-//            throw new IllegalArgumentException("해당 게시글이 존재하지 않거나 비밀번호가 틀렸습니다.");
-//        }
-//        return id;
-//    }
-
-//    private Blog findBlog(Long id) {
-//        return blogRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("선택한 게시글은 존재하지 않습니다."));
-//    }
 
 }
