@@ -23,7 +23,12 @@ public class BlogController {
 
     @GetMapping("/blog")
     public List<BlogResponseDto> getBlogs() {
-        return blogService.getMemos();
+        return blogService.getBlogs();
+    }
+
+    @GetMapping("/blog/{id}")
+    public BlogResponseDto selectBlog(@PathVariable Long id) {
+        return blogService.selectBlog(id);
     }
 
     @PutMapping("/blog/{id}")

@@ -30,10 +30,19 @@ public class BlogService {
         return blogResponseDto;
     }
 
-    public List<BlogResponseDto> getMemos() {
+    public List<BlogResponseDto> getBlogs() {
         // DB 조회
         return blogRepository.findAllByOrderByModifiedAtDesc().stream().map(BlogResponseDto::new).toList();
     }
+
+    public BlogResponseDto selectBlog(Long id) {
+        // 해당 게시글이 존재하는지 확인
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("선택한 게시글은 존재하지 않습니다."));
+        BlogResponseDto blogResponseDto = new BlogResponseDto(blog);
+
+        return blogResponseDto;
+    }
+
     @Transactional
     public Long updateBlog(Long id, BlogRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
