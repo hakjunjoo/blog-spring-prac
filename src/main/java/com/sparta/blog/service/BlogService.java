@@ -2,6 +2,7 @@ package com.sparta.blog.service;
 
 import com.sparta.blog.dto.BlogRequestDto;
 import com.sparta.blog.dto.BlogResponseDto;
+import com.sparta.blog.dto.SuccessDto;
 import com.sparta.blog.entity.Blog;
 import com.sparta.blog.repository.BlogRepository;
 import org.springframework.stereotype.Service;
@@ -58,17 +59,34 @@ public class BlogService {
         return id;
     }
 
-    public Long deleteBlog(Long id, BlogRequestDto requestDto) {
-//        Blog blog = findBlog(id);
+    public SuccessDto deleteBlog(Long id, BlogRequestDto requestDto) {
         Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
         if(blog != null) {
             // blog 삭제
             blogRepository.delete(blog);
+            return new SuccessDto(true);
         } else {
-            throw new IllegalArgumentException("해당 게시글이 존재하지 않거나 비밀번호가 틀렸습니다.");
+            return new SuccessDto(false);
         }
-        return id;
+
+        //status code를 반환하는 것이 일반적인 경우가 많다.
     }
+
+
+//    public Long deleteBlog(Long id, BlogRequestDto requestDto) {
+////        Blog blog = findBlog(id);
+//        Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
+//        if(blog != null) {
+//            // blog 삭제
+//            blogRepository.delete(blog);
+//        } else {
+//            throw new IllegalArgumentException("해당 게시글이 존재하지 않거나 비밀번호가 틀렸습니다.");
+//        }
+//        //status code를 반환하는 것이 일반적인 경우가 많다.
+//        return id;
+//    }
+
+
 
 //    public Long deleteBlog(Long id, String password) {
 ////        Blog blog = findBlog(id);

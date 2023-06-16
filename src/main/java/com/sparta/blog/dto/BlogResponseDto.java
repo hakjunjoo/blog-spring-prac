@@ -1,6 +1,7 @@
 package com.sparta.blog.dto;
 
 import com.sparta.blog.entity.Blog;
+import com.sun.net.httpserver.Authenticator;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -22,5 +23,7 @@ public class BlogResponseDto {
         this.createdAt = blog.getCreatedAt();
         this.modifiedAt = blog.getModifiedAt();
     }
+
+
 
 }
