@@ -45,7 +45,7 @@ public class BlogService {
     }
 
     @Transactional
-    public Long updateBlog(Long id, BlogRequestDto requestDto) {
+    public BlogResponseDto updateBlog(Long id, BlogRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
         Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
 
@@ -56,19 +56,21 @@ public class BlogService {
             throw new IllegalArgumentException("해당 게시글이 존재하지 않거나 비밀번호가 틀렸습니다.");
         }
 
-        return id;
+        return new BlogResponseDto(blog);
     }
 
     public SuccessDto deleteBlog(Long id, BlogRequestDto requestDto) {
         Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
+        boolean success;
         if(blog != null) {
             // blog 삭제
             blogRepository.delete(blog);
-            return new SuccessDto(true);
+            success = true;
         } else {
-            return new SuccessDto(false);
+            success = false;
         }
 
+        return new SuccessDto(success);
         //status code를 반환하는 것이 일반적인 경우가 많다.
     }
 
