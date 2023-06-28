@@ -71,7 +71,7 @@ public class BlogService {
         }
 
         return new DeletedResponseDto(success);
-        //status code를 반환하는 것이 일반적인 경우가 많다.
+        //status code를 반환하는 것이 일반적
     }
 
 }
