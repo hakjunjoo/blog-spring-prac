@@ -37,4 +37,5 @@ public class Blog extends Timestamped {
         this.contents = requestDto.getContents();
         this.password = requestDto.getPassword();
     }
+
 }

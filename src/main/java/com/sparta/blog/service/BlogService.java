@@ -4,11 +4,15 @@ import com.sparta.blog.dto.BlogRequestDto;
 import com.sparta.blog.dto.BlogResponseDto;
 import com.sparta.blog.dto.DeletedResponseDto;
 import com.sparta.blog.entity.Blog;
+import com.sparta.blog.entity.User;
 import com.sparta.blog.repository.BlogRepository;
+import com.sparta.blog.security.UserDetailsImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class BlogService {
@@ -18,9 +22,11 @@ public class BlogService {
         this.blogRepository = blogRepository;
     }
 
-    public BlogResponseDto createBlog(BlogRequestDto requestDto) {
+    public BlogResponseDto createBlog(BlogRequestDto requestDto, UserDetailsImpl userDetails) {
         // RequestDto => Entity
         Blog blog = new Blog(requestDto);
+        blog.setAuthor(userDetails.getUsername());
+        blog.setPassword(userDetails.getPassword());
 
         //DB 저장
         Blog saveBlog = blogRepository.save(blog);
@@ -45,26 +51,34 @@ public class BlogService {
     }
 
     @Transactional
-    public BlogResponseDto updateBlog(Long id, BlogRequestDto requestDto) {
-        // 해당 메모가 DB에 존재하는지 확인
-        Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
+    public BlogResponseDto updateBlog(Long id, BlogRequestDto requestDto, UserDetailsImpl userDetails) {
+        // 해당 글이 DB에 존재하는지 확인
+        Optional<Blog> blog = blogRepository.findById(id);
 
-        // blog 내용 수정
-        if(blog != null) {
-            blog.update(requestDto);
-        } else {
-            throw new IllegalArgumentException("해당 게시글이 존재하지 않거나 비밀번호가 틀렸습니다.");
+        if(blog.isEmpty()) {
+            throw new NoSuchElementException("해당 게시글이 존재하지 않습니다");
         }
 
-        return new BlogResponseDto(blog);
+        if(blog.get().getAuthor().equals(userDetails.getUsername())) {
+            blog.get().setTitle(requestDto.getTitle());
+            blog.get().setContents(requestDto.getContents());
+        }
+
+        return new BlogResponseDto(blog.get());
     }
 
-    public DeletedResponseDto deleteBlog(Long id, BlogRequestDto requestDto) {
-        Blog blog = blogRepository.findByPasswordAndId(requestDto.getPassword(), id);
+    public DeletedResponseDto deleteBlog(Long id, BlogRequestDto requestDto, UserDetailsImpl userDetails) {
+        // 해당 글이 DB에 존재하는지 확인
+        Optional<Blog> blog = blogRepository.findById(id);
+
+        if(blog.isEmpty()) {
+            throw new NoSuchElementException("해당 게시글이 존재하지 않습니다");
+        }
+
         boolean success;
-        if(blog != null) {
+        if(blog.get().getAuthor().equals(userDetails.getUsername())) {
             // blog 삭제
-            blogRepository.delete(blog);
+            blogRepository.delete(blog.get());
             success = true;
         } else {
             success = false;
