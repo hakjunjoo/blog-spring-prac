@@ -5,6 +5,8 @@ import com.sun.net.httpserver.Authenticator;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 @Getter
 public class BlogResponseDto {
@@ -13,13 +15,19 @@ public class BlogResponseDto {
     private String contents; //블로그 글
     private LocalDateTime createdAt; //생성 시간
     private LocalDateTime modifiedAt; //수정 시간
+	private List<CommentResponseDto> comments;
 
-    public BlogResponseDto(Blog blog) {
+
+	public BlogResponseDto(Blog blog) {
         this.title = blog.getTitle();
         this.author = blog.getAuthor();
         this.contents = blog.getContents();
         this.createdAt = blog.getCreatedAt();
         this.modifiedAt = blog.getModifiedAt();
+		this.comments = blog.getComments().stream()
+				.map(CommentResponseDto::new)
+				.sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed()) // 작성날짜 내림차순
+				.toList();
     }
 
 }

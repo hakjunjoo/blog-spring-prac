@@ -8,6 +8,7 @@ import com.sparta.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,12 +26,14 @@ public class BlogController {
     }
 
     @GetMapping("/blog")
+	@Transactional(readOnly = true)
     public List<BlogResponseDto> getBlogs() {
         return blogService.getBlogs();
     }
 
     @GetMapping("/blog/{id}")
-    public BlogResponseDto selectBlog(@PathVariable Long id) {
+	@Transactional(readOnly = true)
+	public BlogResponseDto selectBlog(@PathVariable Long id) {
         return blogService.selectBlog(id);
     }
 

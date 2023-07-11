@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogService {
@@ -37,7 +38,7 @@ public class BlogService {
 
     public List<BlogResponseDto> getBlogs() {
         // DB 조회
-        return blogRepository.findAllByOrderByModifiedAtDesc().stream().map(BlogResponseDto::new).toList();
+        return blogRepository.findAllByOrderByModifiedAtDesc().stream().map(BlogResponseDto::new).collect(Collectors.toList());
     }
 
     public BlogResponseDto selectBlog(Long id) {

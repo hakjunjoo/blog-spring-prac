@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,6 +23,9 @@ public class Blog extends Timestamped {
     private String author; // 블로그 작성자
     @Column(name = "contents", nullable = false, length = 500)
     private String contents; // 블로그 글
+
+	@OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
+	private List<Comment> comments;
 
     public Blog(BlogRequestDto requestDto, String author) {
         this.title = requestDto.getTitle();
