@@ -5,6 +5,7 @@ import com.sparta.blog.dto.BlogResponseDto;
 import com.sparta.blog.dto.DeletedResponseDto;
 import com.sparta.blog.security.UserDetailsImpl;
 import com.sparta.blog.service.BlogService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +14,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class BlogController {
     private final BlogService blogService;
-
-    public BlogController(BlogService blogService) {
-        this.blogService = blogService;
-    }
 
     @PostMapping("/blog")
     public ResponseEntity<BlogResponseDto> createBlog(@RequestBody BlogRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
