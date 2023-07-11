@@ -23,7 +23,6 @@ public class BlogController {
     @PostMapping("/blog")
     public ResponseEntity<BlogResponseDto> createBlog(@RequestBody BlogRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         BlogResponseDto blogResponseDto = blogService.createBlog(requestDto, userDetails);
-
         return ResponseEntity.ok().body(blogResponseDto);
     }
 
@@ -44,8 +43,8 @@ public class BlogController {
     }
 
     @DeleteMapping("/blog/{id}")
-    public DeletedResponseDto deleteBlog(@PathVariable Long id, @RequestBody BlogRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return blogService.deleteBlog(id, requestDto, userDetails);
+    public DeletedResponseDto deleteBlog(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return blogService.deleteBlog(id, userDetails);
     }
 
 }

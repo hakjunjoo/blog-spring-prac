@@ -12,5 +12,6 @@ public class LoginResponseDto {
         this.message = message;
         this.status = status;
     }
+
 }
 
