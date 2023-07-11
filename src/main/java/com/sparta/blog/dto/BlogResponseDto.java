@@ -24,10 +24,13 @@ public class BlogResponseDto {
         this.contents = blog.getContents();
         this.createdAt = blog.getCreatedAt();
         this.modifiedAt = blog.getModifiedAt();
-		this.comments = blog.getComments().stream()
-				.map(CommentResponseDto::new)
-				.sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed()) // 작성날짜 내림차순
-				.toList();
+
+		if(blog.getComments() != null) {
+			this.comments = blog.getComments().stream()
+					.map(CommentResponseDto::new)
+					.sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed()) // 작성날짜 내림차순
+					.toList();
+		}
     }
 
 }

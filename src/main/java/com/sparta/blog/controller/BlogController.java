@@ -44,8 +44,9 @@ public class BlogController {
     }
 
     @DeleteMapping("/blog/{id}")
-    public DeletedResponseDto deleteBlog(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return blogService.deleteBlog(id, userDetails);
+    public ResponseEntity<DeletedResponseDto> deleteBlog(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        DeletedResponseDto deletedResponseDto = blogService.deleteBlog(id, userDetails);
+		return ResponseEntity.ok().body(deletedResponseDto);
     }
 
 }

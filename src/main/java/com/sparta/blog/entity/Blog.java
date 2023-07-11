@@ -24,7 +24,7 @@ public class Blog extends Timestamped {
     @Column(name = "contents", nullable = false, length = 500)
     private String contents; // 블로그 글
 
-	@OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Comment> comments;
 
     public Blog(BlogRequestDto requestDto, String author) {

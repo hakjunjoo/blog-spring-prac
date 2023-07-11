@@ -2,6 +2,7 @@ package com.sparta.blog.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.blog.dto.LoginRequestDto;
+import com.sparta.blog.entity.UserRoleEnum;
 import com.sparta.blog.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,7 +32,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     new UsernamePasswordAuthenticationToken(
                             requestDto.getUsername(),
                             requestDto.getPassword(),
-                            null)
+                            null
+					)
             );
 
         } catch (IOException e) {
@@ -42,8 +44,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+		UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String token = jwtUtil.createToken(username);
+		String token = jwtUtil.createToken(username, role);
         jwtUtil.addJwtToCookie(token, response);
 
     }

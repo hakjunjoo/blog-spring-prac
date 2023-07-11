@@ -1,5 +1,8 @@
 package com.sparta.blog.dto;
 
+import com.sparta.blog.entity.UserRoleEnum;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -18,4 +21,7 @@ public class SignupRequestDto {
     @Size(min = 8, max = 15, message = "비밀번호의 길이는 8자에서 15자 사이여야 합니다.")
     @Pattern(regexp = "^[A-Za-z0-9]*$", message = "아이디는 알파벳 대소문자와 숫자로 구성되어야 합니다.")
     private String password;
+
+	@Enumerated(value = EnumType.STRING)
+	private UserRoleEnum role; // USER or ADMIN
 }

@@ -1,7 +1,9 @@
 package com.sparta.blog.security;
 
 import com.sparta.blog.entity.User;
+import com.sparta.blog.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -29,10 +31,17 @@ public class UserDetailsImpl implements UserDetails {
         return user.getUsername();
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		UserRoleEnum role = user.getRole();
+		String authority = role.getAuthority();
+
+		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
+		Collection<GrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(simpleGrantedAuthority);
+
+		return authorities;
+	}
 
     @Override
     public boolean isAccountNonExpired() {

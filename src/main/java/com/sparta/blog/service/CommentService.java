@@ -5,11 +5,13 @@ import com.sparta.blog.dto.CommentResponseDto;
 import com.sparta.blog.dto.DeletedResponseDto;
 import com.sparta.blog.entity.Blog;
 import com.sparta.blog.entity.Comment;
+import com.sparta.blog.entity.UserRoleEnum;
 import com.sparta.blog.repository.BlogRepository;
 import com.sparta.blog.repository.CommentRepository;
 import com.sparta.blog.security.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,14 +40,14 @@ public class CommentService {
 		Comment comment = checkComment(id, userDetails);
 
 		boolean success = comment.getUsername().equals(userDetails.getUsername());
-		if(success) commentRepository.delete(comment);
+		if (success) commentRepository.delete(comment);
 
-		return new DeletedResponseDto(success);
+		return new DeletedResponseDto("댓글 삭제에 성공했습니다.", HttpStatus.OK);
 	}
 
 	private Comment checkComment(Long id, UserDetailsImpl userDetails) {
 		Comment comment = commentRepository.findById(id).orElseThrow(() -> new NullPointerException("Could Not found Comment"));
-		if(!comment.getUsername().equals(userDetails.getUsername())) {
+		if (!(userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || comment.getUsername().equals(userDetails.getUsername()))) {
 			throw new IllegalArgumentException("자신이 등록한 댓글만 수정 또는 삭제할 수 있습니다.");
 		}
 		return comment;

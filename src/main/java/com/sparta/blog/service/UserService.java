@@ -3,6 +3,7 @@ package com.sparta.blog.service;
 import com.sparta.blog.dto.LoginRequestDto;
 import com.sparta.blog.dto.SignupRequestDto;
 import com.sparta.blog.entity.User;
+import com.sparta.blog.entity.UserRoleEnum;
 import com.sparta.blog.jwt.JwtUtil;
 import com.sparta.blog.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ public class UserService {
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
+		UserRoleEnum role = requestDto.getRole();
 
         // 회원 중복 확인
         Optional<User> checkUsername = userRepository.findByUsername(username);
@@ -31,7 +33,7 @@ public class UserService {
         }
 
         // 사용자 등록
-        User user = new User(username, password);
+        User user = new User(username, password, role);
         userRepository.save(user);
     }
 
