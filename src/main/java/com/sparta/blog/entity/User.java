@@ -21,6 +21,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    // 회원의 권한 USER or ADMIN
 	@Column(name = "role", nullable = false)
 	@Enumerated(value = EnumType.STRING)
 	private UserRoleEnum role;

@@ -57,6 +57,7 @@ public class BlogService {
 			throw new NoSuchElementException("해당 게시글이 존재하지 않습니다");
 		}
 
+		// 회원의 권한이 ADMIN이거나 블로그 글에 등록된 아이디와 일치해야만 게시글 수정이 가능
 		if (!(userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || blog.get().getAuthor().equals(userDetails.getUsername()))) {
 			throw new RejectedExecutionException();
 		}
@@ -73,6 +74,7 @@ public class BlogService {
 			throw new NoSuchElementException("해당 게시글이 존재하지 않습니다");
 		}
 
+		// 회원의 권한이 ADMIN이거나 블로그 글에 등록된 아이디와 일치해야만 게시글 수정이 가능
 		if (!(userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || blog.get().getAuthor().equals(userDetails.getUsername()))) {
 			throw new RejectedExecutionException();
 		} else {

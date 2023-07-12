@@ -20,8 +20,9 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 	private final BlogRepository blogRepository;
 
-	public CommentResponseDto createComment(Long id, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
-		Blog blog = blogRepository.findById(id).orElseThrow(() -> new NullPointerException("Could Not Found Blog"));
+	//댓글 작성 api
+	public CommentResponseDto createComment(Long blogId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+		Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new NullPointerException("Could Not Found Blog"));
 		Comment comment = new Comment(blog, requestDto, userDetails);
 		commentRepository.save(comment);
 
@@ -29,15 +30,15 @@ public class CommentService {
 	}
 
 	@Transactional
-	public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
-		Comment comment = checkComment(id, userDetails);
+	public CommentResponseDto updateComment(Long blogId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+		Comment comment = checkComment(blogId, userDetails);
 
 		comment.update(requestDto);
 		return new CommentResponseDto(comment);
 	}
 
-	public DeletedResponseDto deleteComment(Long id, UserDetailsImpl userDetails) {
-		Comment comment = checkComment(id, userDetails);
+	public DeletedResponseDto deleteComment(Long blogId, UserDetailsImpl userDetails) {
+		Comment comment = checkComment(blogId, userDetails);
 
 		boolean success = comment.getUsername().equals(userDetails.getUsername());
 		if (success) commentRepository.delete(comment);
@@ -45,8 +46,10 @@ public class CommentService {
 		return new DeletedResponseDto("댓글 삭제에 성공했습니다.", HttpStatus.OK);
 	}
 
-	private Comment checkComment(Long id, UserDetailsImpl userDetails) {
-		Comment comment = commentRepository.findById(id).orElseThrow(() -> new NullPointerException("Could Not found Comment"));
+	//수정 또는 삭제할 블로그가 존재하는 지 확인하고 게시글을 수정 또는 삭제할 수 있는 회원인지 확인하는 메서드
+	private Comment checkComment(Long blogId, UserDetailsImpl userDetails) {
+		Comment comment = commentRepository.findById(blogId).orElseThrow(() -> new NullPointerException("Could Not found Comment"));
+
 		if (!(userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || comment.getUsername().equals(userDetails.getUsername()))) {
 			throw new IllegalArgumentException("자신이 등록한 댓글만 수정 또는 삭제할 수 있습니다.");
 		}
