@@ -52,9 +52,16 @@ public class BlogController {
 		return ResponseEntity.ok().body(deletedResponseDto);
     }
 
+    //블로그 게시글 좋아요 기능
     @PostMapping("/blog/{id}/like")
-    public ResponseEntity<LikeResponseDto> like(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<LikeResponseDto> likeBlog(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok().body(likeService.likeBlog(id, userDetails.getUser()));
+    }
+
+    //블로그 게시글 좋아요 취소 기능
+    @DeleteMapping("/blog/{id}/like")
+    public ResponseEntity<LikeResponseDto> deleteLikeBlog(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(likeService.deleteLikeBlog(id, userDetails.getUser()));
     }
 
 }

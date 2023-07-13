@@ -7,9 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "Comment")
 public class Comment extends Timestamped {
@@ -23,6 +24,9 @@ public class Comment extends Timestamped {
 	@Column(nullable = false)
 	private String comment;
 
+	@Column(name = "likeCount")
+	private Long likeCount; // 좋아요 개수
+
 	@ManyToOne
 	@JoinColumn(name = "blog_id")
 	private Blog blog;
@@ -31,14 +35,22 @@ public class Comment extends Timestamped {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<Like> likes;
+
 	public Comment(Blog blog, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
 		this.username = userDetails.getUsername();
 		this.comment = requestDto.getComment();
 		this.blog = blog;
 		this.user = userDetails.getUser();
+		this.likeCount = 0L;
 	}
 
 	public void update(CommentRequestDto comment) {
 		this.comment = comment.getComment();
+	}
+
+	public void setLikeCount(Long likeCount) {
+		this.likeCount = likeCount;
 	}
 }

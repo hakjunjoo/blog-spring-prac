@@ -21,8 +21,19 @@ public class Like {
     @JoinColumn(name = "blog_id")
     private Blog blog;
 
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
+
     public Like(User user, Blog blog) {
         this.user = user;
         this.blog = blog;
+    }
+
+    public Like(User user, Comment comment) {
+        this.user = user;
+        this.blog = comment.getBlog();
+        this.comment = comment;
     }
 }

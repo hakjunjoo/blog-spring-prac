@@ -30,6 +30,9 @@ public class Blog extends Timestamped {
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Comment> comments;
 
+    @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Like> likes;
+
     public Blog(BlogRequestDto requestDto, String author) {
         this.title = requestDto.getTitle();
         this.author = author;
