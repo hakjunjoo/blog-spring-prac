@@ -2,19 +2,16 @@ package com.sparta.blog.service;
 
 import com.sparta.blog.dto.BlogRequestDto;
 import com.sparta.blog.dto.BlogResponseDto;
-import com.sparta.blog.dto.DeletedResponseDto;
 import com.sparta.blog.entity.Blog;
 import com.sparta.blog.entity.UserRoleEnum;
 import com.sparta.blog.repository.BlogRepository;
 import com.sparta.blog.security.UserDetailsImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,39 +46,34 @@ public class BlogService {
 	}
 
 	@Transactional
-	public BlogResponseDto updateBlog(Long id, BlogRequestDto requestDto, UserDetailsImpl userDetails) {
+	public void updateBlog(Long id, BlogRequestDto requestDto, UserDetailsImpl userDetails) {
 		// 해당 글이 DB에 존재하는지 확인
 		Optional<Blog> blog = blogRepository.findById(id);
-
 		if (blog.isEmpty()) {
 			throw new NoSuchElementException("해당 게시글이 존재하지 않습니다");
 		}
 
 		// 회원의 권한이 ADMIN이거나 블로그 글에 등록된 아이디와 일치해야만 게시글 수정이 가능
 		if (!(userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || blog.get().getAuthor().equals(userDetails.getUsername()))) {
-			throw new RejectedExecutionException();
+			throw new IllegalArgumentException();
 		}
 
 		blog.get().update(requestDto);
-		return new BlogResponseDto(blog.get());
 	}
 
-	public DeletedResponseDto deleteBlog(Long id, UserDetailsImpl userDetails) {
+	public void deleteBlog(Long id, UserDetailsImpl userDetails) {
 		// 해당 글이 DB에 존재하는지 확인
 		Optional<Blog> blog = blogRepository.findById(id);
 
 		if (blog.isEmpty()) {
 			throw new NoSuchElementException("해당 게시글이 존재하지 않습니다");
 		}
-
 		// 회원의 권한이 ADMIN이거나 블로그 글에 등록된 아이디와 일치해야만 게시글 수정이 가능
-		if (!(userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || blog.get().getAuthor().equals(userDetails.getUsername()))) {
-			throw new RejectedExecutionException();
-		} else {
+		if (userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || blog.get().getAuthor().equals(userDetails.getUsername())) {
 			blogRepository.delete(blog.get());
+		} else {
+			throw new IllegalArgumentException();
 		}
-
-		return new DeletedResponseDto("게시글 삭제에 성공했습니다.", HttpStatus.OK);
 	}
 
 }
