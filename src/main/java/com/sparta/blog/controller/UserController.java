@@ -31,5 +31,14 @@ public class UserController {
     }
 
     // 로그인 처리
+    @GetMapping("/user/login/successful")
+    public ResponseEntity<ApiResponseDto> login() {
+        return ResponseEntity.ok().body(new ApiResponseDto("로그인에 성공했습니다.", HttpStatus.OK.value()));
+    }
+
+    @GetMapping("/user/login/fail")
+    public ResponseEntity<ApiResponseDto> failLogin() {
+        return ResponseEntity.ok().body(new ApiResponseDto("회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST.value()));
+    }
 }
 
