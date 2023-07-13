@@ -2,22 +2,21 @@
 
 ERD
 -
-
-![blog erd.PNG](..%2F..%2F..%2F..%2F%EC%BD%94%EB%94%A9%20%EB%B8%94%EB%A1%9C%EA%B7%B8%20%EC%82%AC%EC%A7%84%2Fblog%20erd.PNG)
+![blog erd.PNG](src%2Fmain%2Fresources%2Fstatic%2FRM%2Fblog%20erd.PNG)
 
 -------------------------------------
 Api 명세
 -
 1. User
-![User api.PNG](..%2F..%2F..%2F..%2F%EC%BD%94%EB%94%A9%20%EB%B8%94%EB%A1%9C%EA%B7%B8%20%EC%82%AC%EC%A7%84%2FUser%20api.PNG)
+![User api.PNG](src%2Fmain%2Fresources%2Fstatic%2FRM%2FUser%20api.PNG)
 
    
 2. Blog
-![Blog api.PNG](..%2F..%2F..%2F..%2F%EC%BD%94%EB%94%A9%20%EB%B8%94%EB%A1%9C%EA%B7%B8%20%EC%82%AC%EC%A7%84%2FBlog%20api.PNG)
+![Blog api.PNG](src%2Fmain%2Fresources%2Fstatic%2FRM%2FBlog%20api.PNG)
 
 
 3. Comment
-![Comment Api.PNG](..%2F..%2F..%2F..%2F%EC%BD%94%EB%94%A9%20%EB%B8%94%EB%A1%9C%EA%B7%B8%20%EC%82%AC%EC%A7%84%2FComment%20Api.PNG)
+![Comment Api.PNG](src%2Fmain%2Fresources%2Fstatic%2FRM%2FComment%20Api.PNG)
 
 -------------------------------------
 
