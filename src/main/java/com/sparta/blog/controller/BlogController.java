@@ -3,8 +3,10 @@ package com.sparta.blog.controller;
 import com.sparta.blog.dto.BlogRequestDto;
 import com.sparta.blog.dto.BlogResponseDto;
 import com.sparta.blog.dto.DeletedResponseDto;
+import com.sparta.blog.dto.LikeResponseDto;
 import com.sparta.blog.security.UserDetailsImpl;
 import com.sparta.blog.service.BlogService;
+import com.sparta.blog.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BlogController {
     private final BlogService blogService;
+    private final LikeService likeService;
 
     @PostMapping("/blog")
     public ResponseEntity<BlogResponseDto> createBlog(@RequestBody BlogRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -47,6 +50,11 @@ public class BlogController {
     public ResponseEntity<DeletedResponseDto> deleteBlog(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         DeletedResponseDto deletedResponseDto = blogService.deleteBlog(id, userDetails);
 		return ResponseEntity.ok().body(deletedResponseDto);
+    }
+
+    @PostMapping("/blog/{id}/like")
+    public ResponseEntity<LikeResponseDto> like(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(likeService.likeBlog(id, userDetails.getUser()));
     }
 
 }
