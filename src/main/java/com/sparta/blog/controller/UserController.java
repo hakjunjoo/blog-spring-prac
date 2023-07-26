@@ -22,12 +22,13 @@ public class UserController {
     // @valid 유효성체크에 통과하지 못하면  MethodArgumentNotValidException 이 발생한다. -> ControllerAdvice, ExceptionHandler 로 전역에서 예외 관리
     @PostMapping("/user/signup")
     public ResponseEntity<ApiResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto) {
-        try {
-            userService.signup(requestDto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ApiResponseDto("중복된 username 입니다", HttpStatus.BAD_REQUEST.value()));
-        }
-        return ResponseEntity.ok().body(new ApiResponseDto("회원가입에 성공했습니다.", HttpStatus.CREATED.value()));
+        userService.signup(requestDto);
+        ApiResponseDto apiResponseDto = new ApiResponseDto("회원가입에 성공했습니다.", HttpStatus.CREATED.value());
+
+        return new ResponseEntity<>(
+                apiResponseDto,
+                HttpStatus.CREATED
+        );
     }
 
     // 로그인 처리
