@@ -2,9 +2,11 @@ package com.sparta.blog.controller;
 
 import com.sparta.blog.dto.*;
 import com.sparta.blog.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -32,14 +35,29 @@ public class UserController {
     }
 
     // 로그인 처리
-    @GetMapping("/user/login/successful")
-    public ResponseEntity<ApiResponseDto> login() {
-        return ResponseEntity.ok().body(new ApiResponseDto("로그인에 성공했습니다.", HttpStatus.OK.value()));
+    @PostMapping("/user/login/success")
+    public ResponseEntity<ApiResponseDto> login(HttpServletRequest request, HttpServletResponse response) {
+        String errorMessage = (String) request.getAttribute("message");
+        int status = response.getStatus();
+        ApiResponseDto apiResponseDto = new ApiResponseDto(errorMessage, status);
+
+        return new ResponseEntity<>(
+                apiResponseDto,
+                HttpStatus.OK
+        );
     }
 
-    @GetMapping("/user/login/fail")
-    public ResponseEntity<ApiResponseDto> failLogin() {
-        return ResponseEntity.ok().body(new ApiResponseDto("회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST.value()));
+    @PostMapping("/user/login/fail")
+    public ResponseEntity<ApiResponseDto> loginFail(HttpServletRequest request, HttpServletResponse response) {
+        String errorMessage = (String) request.getAttribute("message");
+        int status = response.getStatus();
+        ApiResponseDto apiResponseDto = new ApiResponseDto(errorMessage, status);
+
+        // 상태 코드와 에러 메시지를 ResponseEntity에 담아서 반환
+        return new ResponseEntity<>(
+                apiResponseDto,
+                HttpStatus.UNAUTHORIZED
+        );
     }
 }
 
