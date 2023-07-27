@@ -1,15 +1,12 @@
 package com.sparta.blog.service;
 
-import com.sparta.blog.dto.LoginRequestDto;
 import com.sparta.blog.dto.SignupRequestDto;
 import com.sparta.blog.entity.User;
 import com.sparta.blog.entity.UserRoleEnum;
-import com.sparta.blog.exception.DuplicateUsernameException;
-import com.sparta.blog.exception.PasswordContainsUsernameException;
-import com.sparta.blog.exception.PasswordMismatchException;
-import com.sparta.blog.jwt.JwtUtil;
+import com.sparta.blog.exception.user.DuplicateUsernameException;
+import com.sparta.blog.exception.user.PasswordContainsUsernameException;
+import com.sparta.blog.exception.user.PasswordMismatchException;
 import com.sparta.blog.repository.UserRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,9 @@
-package com.sparta.blog.exception;
+package com.sparta.blog.exception.user;
 
 import com.sparta.blog.dto.ApiResponseDto;
+import com.sparta.blog.exception.user.DuplicateUsernameException;
+import com.sparta.blog.exception.user.PasswordContainsUsernameException;
+import com.sparta.blog.exception.user.PasswordMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @ControllerAdvice : 전역으로 예외를 처리할 수 있음
  */
 @RestControllerAdvice
-public class UserSignupExceptionController {
+public class UserExceptionController {
     /**
      * @ExceptionHandler : @Controller, @RestController가 적용된 Bean내에서 발생하는 예외를 잡아서 하나의 메서드에서 처리해주는 기능
      * - Controller, Restcontroller에만 적용이 가능하다 (@Service 같은 빈에서는 안된다.)

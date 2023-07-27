@@ -1,4 +1,4 @@
-package com.sparta.blog.exception;
+package com.sparta.blog.exception.user;
 
 public class PasswordMismatchException extends RuntimeException{
     public PasswordMismatchException(String message) {
