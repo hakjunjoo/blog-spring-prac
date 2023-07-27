@@ -25,14 +25,18 @@ public class BlogController {
     @PostMapping("/blog")
     public ResponseEntity<BlogResponseDto> createBlog(@RequestBody BlogRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         BlogResponseDto blogResponseDto = blogService.createBlog(requestDto, userDetails);
-        return ResponseEntity.ok().body(blogResponseDto);
+
+        return new ResponseEntity<>(
+                blogResponseDto,
+                HttpStatus.CREATED
+        );
     }
 
-    //블로그 글 전체 조회 api
-    @GetMapping("/blog")
+    //블로그 글 목록 조회 api
+    @GetMapping("/blog-list")
 	@Transactional(readOnly = true)
-    public List<BlogResponseDto> getBlogs() {
-        return blogService.getBlogs();
+    public List<BlogListResponseDto> getBlogList() {
+        return blogService.getBlogList();
     }
 
     // 선택한 블로그 글 조회 api

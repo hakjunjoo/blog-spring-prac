@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,10 +29,10 @@ public class Blog extends Timestamped {
     private Long likeCount; // 좋아요 개수
 
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private List<Comment> comments;
+	private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Like> likes;
+    private List<Like> likes = new ArrayList<>();
 
     public Blog(BlogRequestDto requestDto, String author) {
         this.title = requestDto.getTitle();

@@ -1,5 +1,6 @@
 package com.sparta.blog.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta.blog.entity.Blog;
 import lombok.Getter;
 
@@ -8,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlogResponseDto {
     private String title; //블로그 제목
     private String author; //블로그 작성자
@@ -25,14 +27,10 @@ public class BlogResponseDto {
         this.likeCount = blog.getLikeCount();
         this.createdAt = blog.getCreatedAt();
         this.modifiedAt = blog.getModifiedAt();
-
-        // 처음 게시글을 생성하는 경우 comment 는 null 이라서 에러가 발생함
-		if(blog.getComments() != null) {
-			this.comments = blog.getComments().stream()
+        this.comments = blog.getComments().stream()
 					.map(CommentResponseDto::new)
 					.sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed()) // 작성날짜 내림차순 정렬
 					.toList();
-		}
     }
 
 }

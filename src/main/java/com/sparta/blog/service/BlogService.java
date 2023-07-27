@@ -1,11 +1,13 @@
 package com.sparta.blog.service;
 
+import com.sparta.blog.dto.BlogListResponseDto;
 import com.sparta.blog.dto.BlogRequestDto;
 import com.sparta.blog.dto.BlogResponseDto;
 import com.sparta.blog.entity.Blog;
 import com.sparta.blog.entity.UserRoleEnum;
 import com.sparta.blog.repository.BlogRepository;
 import com.sparta.blog.security.UserDetailsImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +17,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BlogService {
 	private final BlogRepository blogRepository;
-
-	public BlogService(BlogRepository blogRepository) {
-		this.blogRepository = blogRepository;
-	}
 
 	public BlogResponseDto createBlog(BlogRequestDto requestDto, UserDetailsImpl userDetails) {
 		// RequestDto => Entity
@@ -33,15 +32,15 @@ public class BlogService {
 		return new BlogResponseDto(blog);
 	}
 
-	public List<BlogResponseDto> getBlogs() {
+	// 전체 게시글 목록 조회 API
+	public List<BlogListResponseDto> getBlogList() {
 		// DB 조회
-		return blogRepository.findAllByOrderByModifiedAtDesc().stream().map(BlogResponseDto::new).collect(Collectors.toList());
+		return blogRepository.findAllByOrderByCreatedAtDesc().stream().map(BlogListResponseDto::new).collect(Collectors.toList());
 	}
 
 	public BlogResponseDto selectBlog(Long id) {
 		// 해당 게시글이 존재하는지 확인
 		Blog blog = blogRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("선택한 게시글은 존재하지 않습니다."));
-
 		return new BlogResponseDto(blog);
 	}
 
