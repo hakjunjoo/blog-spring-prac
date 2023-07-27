@@ -1,4 +1,4 @@
-package com.sparta.blog.exception.user;
+package com.sparta.blog.exception;
 
 import com.sparta.blog.dto.ApiResponseDto;
 import com.sparta.blog.exception.user.DuplicateUsernameException;

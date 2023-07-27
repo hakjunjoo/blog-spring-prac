@@ -1,5 +1,6 @@
 package com.sparta.blog.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.blog.jwt.JwtAuthorizationFilter;
 import com.sparta.blog.jwt.JwtAuthenticationFilter;
 import com.sparta.blog.jwt.JwtUtil;
@@ -24,11 +25,13 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final ObjectMapper objectMapper;
 
-    public WebSecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, AuthenticationConfiguration authenticationConfiguration) {
+    public WebSecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, AuthenticationConfiguration authenticationConfiguration, ObjectMapper objectMapper) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
         this.authenticationConfiguration = authenticationConfiguration;
+        this.objectMapper = objectMapper;
     }
 
     @Bean
@@ -45,7 +48,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsService, objectMapper);
     }
 
     @Bean
