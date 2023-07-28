@@ -5,6 +5,8 @@ import com.sparta.blog.entity.Blog;
 import com.sparta.blog.entity.Comment;
 import com.sparta.blog.entity.Like;
 import com.sparta.blog.entity.User;
+import com.sparta.blog.exception.blog.NoExistBlogException;
+import com.sparta.blog.exception.blog.NoExistCommentException;
 import com.sparta.blog.repository.BlogRepository;
 import com.sparta.blog.repository.CommentRepository;
 import com.sparta.blog.repository.LikeRepository;
@@ -24,7 +26,7 @@ public class LikeServiceImpl implements LikeService{
     @Transactional
     public ApiResponseDto likeBlog(Long blogId, User user) {
         //해당 게시글이 존재하는지 확인
-        Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new NullPointerException("Could Not found blog"));
+        Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new NoExistBlogException("해당 게시글이 존재하지 않습니다."));
 
         //해당 게시글에 좋아요를 누른 아이디인지 체크
         Like checkLike = likeRepository.findByUserIdAndBlogId(user.getId(), blogId);
@@ -45,7 +47,7 @@ public class LikeServiceImpl implements LikeService{
     @Transactional
     public ApiResponseDto deleteLikeBlog(Long blogId, User user) {
         //해당 게시글이 존재하는지 확인
-        Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new NullPointerException("Could Not found blog"));
+        Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new NoExistBlogException("해당 게시글이 존재하지 않습니다."));
 
         //해당 게시글에 좋아요를 누른 아이디인지 체크
         Like checkLike = likeRepository.findByUserIdAndBlogId(user.getId(), blogId);
@@ -67,7 +69,7 @@ public class LikeServiceImpl implements LikeService{
         //해당 게시글, 댓글이 존재하는지 확인
         Comment comment = commentRepository.findByIdAndBlogId(commentId, blogId);
         if(comment == null) {
-            throw new IllegalArgumentException("해당 댓글이 존재하지 않습니다.");
+            throw new NoExistCommentException("해당 댓글이 존재하지 않습니다.");
         }
 
         // 해당 댓글에 좋아요를 누른 아이디인지 확인
@@ -91,7 +93,7 @@ public class LikeServiceImpl implements LikeService{
         //해당 게시글, 댓글이 존재하는지 확인
         Comment comment = commentRepository.findByIdAndBlogId(commentId, blogId);
         if(comment == null) {
-            throw new IllegalArgumentException("해당 댓글이 존재하지 않습니다.");
+            throw new NoExistCommentException("해당 댓글이 존재하지 않습니다.");
         }
 
         // 해당 댓글에 좋아요를 누른 아이디인지 확인
