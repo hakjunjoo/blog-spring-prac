@@ -3,70 +3,49 @@ package com.sparta.blog.service;
 import com.sparta.blog.dto.BlogListResponseDto;
 import com.sparta.blog.dto.BlogRequestDto;
 import com.sparta.blog.dto.BlogResponseDto;
-import com.sparta.blog.entity.Blog;
-import com.sparta.blog.entity.UserRoleEnum;
-import com.sparta.blog.exception.blog.NoExistBlogException;
-import com.sparta.blog.exception.blog.NoPermissionException;
-import com.sparta.blog.repository.BlogRepository;
 import com.sparta.blog.security.UserDetailsImpl;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
-public class BlogService {
-	private final BlogRepository blogRepository;
+public interface BlogService {
 
-	public BlogResponseDto createBlog(BlogRequestDto requestDto, UserDetailsImpl userDetails) {
-		// RequestDto => Entity
-		Blog blog = new Blog(requestDto, userDetails.getUsername());
+    /**
+     * 게시글 생성 API
+     * @param requestDto 게시글 생성 요청 정보
+     * @param userDetails 게시글 생성 요청자 정보
+     * @return 게시글 생성 결과
+     */
+    BlogResponseDto createBlog(BlogRequestDto requestDto, UserDetailsImpl userDetails);
 
-		//DB 저장
-		blogRepository.save(blog);
 
-		// Entity => ResponseDto
-		return new BlogResponseDto(blog);
-	}
+    /**
+     * 게시글 목록 조회 API
+     * @return 목록 조회 결과
+     */
+    List<BlogListResponseDto> getBlogList();
 
-	// 전체 게시글 목록 조회 API
-	public List<BlogListResponseDto> getBlogList() {
-		// DB 조회
-		return blogRepository.findAllByOrderByCreatedAtDesc().stream().map(BlogListResponseDto::new).collect(Collectors.toList());
-	}
 
-	public BlogResponseDto selectBlog(Long id) {
-		// 해당 게시글이 존재하는지 확인
-		Blog blog = blogRepository.findById(id).orElseThrow(() -> new NoExistBlogException("선택한 게시글은 존재하지 않습니다."));
-		return new BlogResponseDto(blog);
-	}
+    /**
+     * 선택 게시글 조회 API
+     * @param id 선택 게시글 정보
+     * @return 게시글 선택 결과
+     */
+    BlogResponseDto selectBlog(Long id);
 
-	@Transactional
-	public void updateBlog(Long id, BlogRequestDto requestDto, UserDetailsImpl userDetails) {
-		// 해당 글이 DB에 존재하는지 확인
-		Blog blog = blogRepository.findById(id).orElseThrow(() -> new NoExistBlogException("해당 게시글이 존재하지 않습니다"));
 
-		// 회원의 권한이 ADMIN이거나 블로그 글에 등록된 아이디와 일치해야만 게시글 수정이 가능
-		if (!(userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || blog.getAuthor().equals(userDetails.getUsername()))) {
-			throw new NoPermissionException("본인이 작성한 게시글만 수정할 수 있습니다.");
-		}
+    /**
+     * 게시글 수정 API
+     * @param id 선택 게시글 정보
+     * @param requestDto 게시글 수정 요청 정보
+     * @param userDetails 게시글 수정 요청자 정보
+     */
+    void updateBlog(Long id, BlogRequestDto requestDto, UserDetailsImpl userDetails);
 
-		blog.update(requestDto);
-	}
 
-	public void deleteBlog(Long id, UserDetailsImpl userDetails) {
-		// 해당 글이 DB에 존재하는지 확인
-		Blog blog = blogRepository.findById(id).orElseThrow(() -> new NoExistBlogException("해당 게시글이 존재하지 않습니다"));
-
-		// 회원의 권한이 ADMIN이거나 블로그 글에 등록된 아이디와 일치해야만 게시글 수정이 가능
-		if (userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || blog.getAuthor().equals(userDetails.getUsername())) {
-			blogRepository.delete(blog);
-		} else {
-			throw new NoPermissionException("본인이 작성한 게시글만 삭제할 수 있습니다.");
-		}
-	}
-
+    /**
+     * 게시글 삭제 API
+     * @param id 선택 게시글 정보
+     * @param userDetails 게시글 삭제 요청자 정보
+     */
+    void deleteBlog(Long id, UserDetailsImpl userDetails);
 }
