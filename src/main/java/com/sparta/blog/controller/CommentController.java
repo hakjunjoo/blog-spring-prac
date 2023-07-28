@@ -24,29 +24,32 @@ public class CommentController {
 	@PostMapping("/blog/{blogId}/comment")
 	public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long blogId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		CommentResponseDto commentResponseDto = commentService.createComment(blogId, requestDto, userDetails);
-		return ResponseEntity.ok().body(commentResponseDto);
+		return new ResponseEntity<>(
+				commentResponseDto,
+				HttpStatus.CREATED
+		);
 	}
 
 	//댓글 수정 api
 	@PutMapping("/blog/{blogId}/comment/{commentId}")
 	public ResponseEntity<ApiResponseDto> updateComment(@PathVariable Long blogId, @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		try {
-			commentService.updateComment(blogId, commentId, requestDto, userDetails);
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(new ApiResponseDto("작성자만 삭제/수정할 수 있습니다.", HttpStatus.BAD_REQUEST.value()));
-		}
-		return ResponseEntity.ok().body(new ApiResponseDto("해당 댓글을 수정했습니다.", HttpStatus.OK.value()));
+		commentService.updateComment(blogId, commentId, requestDto, userDetails);
+		ApiResponseDto apiResponseDto = new ApiResponseDto("해당 댓글을 수정했습니다.", HttpStatus.OK.value());
+		return new ResponseEntity<>(
+				apiResponseDto,
+				HttpStatus.OK
+		);
 	}
 
 	//댓글 삭제 api
 	@DeleteMapping("/blog/{blogId}/comment/{commentId}")
 	public ResponseEntity<ApiResponseDto> deleteComment(@PathVariable Long blogId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		try {
-			commentService.deleteComment(blogId, commentId, userDetails);
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(new ApiResponseDto("작성자만 삭제/수정할 수 있습니다.", HttpStatus.BAD_REQUEST.value()));
-		}
-		return ResponseEntity.ok().body(new ApiResponseDto("해당 댓글을 수정했습니다.", HttpStatus.OK.value()));
+		commentService.deleteComment(blogId, commentId, userDetails);
+		ApiResponseDto apiResponseDto = new ApiResponseDto("해당 댓글을 삭제했습니다.", HttpStatus.OK.value());
+		return new ResponseEntity<>(
+				apiResponseDto,
+				HttpStatus.OK
+		);
 	}
 
 	// 댓글 좋아요 기능
