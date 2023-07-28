@@ -54,12 +54,22 @@ public class CommentController {
 	// 댓글 좋아요 기능
 	@PostMapping("/blog/{blogId}/comment/{commentId}/like")
 	public ResponseEntity<ApiResponseDto> likeComment(@PathVariable Long blogId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.ok().body(likeService.likeComment(blogId, commentId, userDetails.getUser()));
+		likeService.likeComment(blogId, commentId, userDetails.getUser());
+		ApiResponseDto apiResponseDto = new ApiResponseDto("좋아요를 눌렀습니다.", HttpStatus.OK.value());
+		return new ResponseEntity<>(
+				apiResponseDto,
+				HttpStatus.OK
+		);
 	}
 
 	// 댓글 좋아요 취소 기능
 	@DeleteMapping("/blog/{blogId}/comment/{commentId}/like")
 	public ResponseEntity<ApiResponseDto> deleteLikeComment(@PathVariable Long blogId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.ok().body(likeService.deleteLikeComment(blogId, commentId, userDetails.getUser()));
+		likeService.deleteLikeComment(blogId, commentId, userDetails.getUser());
+		ApiResponseDto apiResponseDto = new ApiResponseDto("좋아요를 취소했습니다.", HttpStatus.OK.value());
+		return new ResponseEntity<>(
+				apiResponseDto,
+				HttpStatus.OK
+		);
 	}
 }

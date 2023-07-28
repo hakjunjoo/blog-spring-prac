@@ -81,14 +81,24 @@ public class BlogController {
     //블로그 게시글 좋아요 기능
     @PostMapping("/blog/{id}/like")
     public ResponseEntity<ApiResponseDto> likeBlog(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(likeService.likeBlog(id, userDetails.getUser()));
+        likeService.likeBlog(id, userDetails.getUser());
+        ApiResponseDto apiResponseDto = new ApiResponseDto("좋아요를 눌렀습니다.", HttpStatus.OK.value());
+        return new ResponseEntity<>(
+                apiResponseDto,
+                HttpStatus.OK
+        );
     }
 
 
     //블로그 게시글 좋아요 취소 기능
     @DeleteMapping("/blog/{id}/like")
     public ResponseEntity<ApiResponseDto> deleteLikeBlog(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(likeService.deleteLikeBlog(id, userDetails.getUser()));
+        likeService.deleteLikeBlog(id, userDetails.getUser());
+        ApiResponseDto apiResponseDto = new ApiResponseDto("좋아요를 취소했습니다.", HttpStatus.OK.value());
+        return new ResponseEntity<>(
+                apiResponseDto,
+                HttpStatus.OK
+        );
     }
 
 }
