@@ -6,6 +6,7 @@ import com.sparta.blog.dto.BlogResponseDto;
 import com.sparta.blog.entity.Blog;
 import com.sparta.blog.entity.UserRoleEnum;
 import com.sparta.blog.exception.blog.NoExistBlogException;
+import com.sparta.blog.exception.blog.NoPermissionException;
 import com.sparta.blog.repository.BlogRepository;
 import com.sparta.blog.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,11 +47,11 @@ public class BlogService {
 	@Transactional
 	public void updateBlog(Long id, BlogRequestDto requestDto, UserDetailsImpl userDetails) {
 		// 해당 글이 DB에 존재하는지 확인
-		Blog blog = checkExistBlog(id);
+		Blog blog = blogRepository.findById(id).orElseThrow(() -> new NoExistBlogException("해당 게시글이 존재하지 않습니다"));
 
 		// 회원의 권한이 ADMIN이거나 블로그 글에 등록된 아이디와 일치해야만 게시글 수정이 가능
 		if (!(userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || blog.getAuthor().equals(userDetails.getUsername()))) {
-			throw new IllegalArgumentException();
+			throw new NoPermissionException("본인이 작성한 게시글만 수정할 수 있습니다.");
 		}
 
 		blog.update(requestDto);
@@ -60,19 +59,14 @@ public class BlogService {
 
 	public void deleteBlog(Long id, UserDetailsImpl userDetails) {
 		// 해당 글이 DB에 존재하는지 확인
-		Blog blog = checkExistBlog(id);
+		Blog blog = blogRepository.findById(id).orElseThrow(() -> new NoExistBlogException("해당 게시글이 존재하지 않습니다"));
 
 		// 회원의 권한이 ADMIN이거나 블로그 글에 등록된 아이디와 일치해야만 게시글 수정이 가능
 		if (userDetails.getUser().getRole().equals(UserRoleEnum.ADMIN) || blog.getAuthor().equals(userDetails.getUsername())) {
 			blogRepository.delete(blog);
 		} else {
-			throw new IllegalArgumentException();
+			throw new NoPermissionException("본인이 작성한 게시글만 삭제할 수 있습니다.");
 		}
-	}
-
-	private Blog checkExistBlog(Long id) {
-		Blog blog = blogRepository.findById(id).orElseThrow(() -> new NoExistBlogException("해당 게시글이 존재하지 않습니다"));
-		return blog;
 	}
 
 }
