@@ -21,7 +21,7 @@ public interface CommentService {
      * @param requestDto 댓글 수정 요청 정보
      * @param userDetails 댓글 수정 요청자 정보
      */
-    void updateComment(Long blogId, Long commentId, CommentRequestDto requestDto, UserDetailsImpl userDetails);
+    void updateComment(Long blogId, Long commentId,  UserDetailsImpl userDetails, CommentRequestDto requestDto);
 
 
     /**

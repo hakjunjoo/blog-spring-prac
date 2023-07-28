@@ -22,6 +22,7 @@ public class CommentServiceImpl implements CommentService{
 	private final BlogRepository blogRepository;
 
 	//댓글 작성 api
+	@Override
 	public CommentResponseDto createComment(Long blogId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
 		Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new NoExistBlogException("해당 블로그가 존재하지 않습니다."));
 
@@ -32,13 +33,15 @@ public class CommentServiceImpl implements CommentService{
 	}
 
 	//댓글 수정 API
+	@Override
 	@Transactional
-	public void updateComment(Long blogId, Long commentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+	public void updateComment(Long blogId, Long commentId,  UserDetailsImpl userDetails, CommentRequestDto requestDto) {
 		Comment comment = checkComment(blogId, commentId, userDetails);
 		comment.update(requestDto);
 	}
 
 	//댓글 삭제 API
+	@Override
 	public void deleteComment(Long blogId, Long commentId, UserDetailsImpl userDetails) {
 		Comment comment = checkComment(blogId, commentId, userDetails);
 		commentRepository.delete(comment);
