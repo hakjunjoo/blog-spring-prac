@@ -36,10 +36,10 @@ public interface BlogService {
     /**
      * 게시글 수정 API
      * @param id 선택 게시글 정보
-     * @param requestDto 게시글 수정 요청 정보
      * @param userDetails 게시글 수정 요청자 정보
+     * @param requestDto 게시글 수정 요청 정보
      */
-    void updateBlog(Long id, BlogRequestDto requestDto, UserDetailsImpl userDetails);
+    void updateBlog(Long id,UserDetailsImpl userDetails, BlogRequestDto requestDto);
 
 
     /**
