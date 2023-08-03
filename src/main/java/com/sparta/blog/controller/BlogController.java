@@ -6,7 +6,6 @@ import com.sparta.blog.dto.BlogRequestDto;
 import com.sparta.blog.dto.BlogResponseDto;
 import com.sparta.blog.security.UserDetailsImpl;
 import com.sparta.blog.service.BlogService;
-import com.sparta.blog.service.BlogServiceImpl;
 import com.sparta.blog.service.LikeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,6 @@ public class BlogController {
                 HttpStatus.CREATED
         );
     }
-
 
     //블로그 글 목록 조회 api
     @GetMapping("/blog-list")
@@ -101,5 +99,10 @@ public class BlogController {
         );
     }
 
+    // 블로그 게시글 검색
+    @GetMapping("/blog/search")
+    public List<BlogResponseDto> searchBlog(@RequestParam("key") String param) {
+        return blogService.searchBlog(param);
+    }
 }
 

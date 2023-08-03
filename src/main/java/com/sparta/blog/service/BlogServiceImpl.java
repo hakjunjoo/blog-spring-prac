@@ -52,7 +52,7 @@ public class BlogServiceImpl implements BlogService{
 		blog.update(requestDto);
 	}
 
-	//게시글 삭제 API
+	// 게시글 삭제 API
 	@Override
 	public void deleteBlog(Long id, UserDetailsImpl userDetails) {
 		// 해당 글이 DB에 존재하는지 확인
@@ -60,4 +60,12 @@ public class BlogServiceImpl implements BlogService{
 		blogRepository.delete(blog);
 	}
 
+	// 게시글 검색 API
+	@Override
+	@Transactional(readOnly = true)
+	public List<BlogResponseDto> searchBlog(String param) {
+		return blogRepository.searchBlog(param).stream()
+				.map(BlogResponseDto::new)
+				.collect(Collectors.toList());
+	}
 }

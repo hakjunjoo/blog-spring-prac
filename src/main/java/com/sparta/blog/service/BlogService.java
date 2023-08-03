@@ -48,4 +48,11 @@ public interface BlogService {
      * @param userDetails 게시글 삭제 요청자 정보
      */
     void deleteBlog(Long id, UserDetailsImpl userDetails);
+
+    /**
+     * 게시글 검색 API
+     * @param param 게시글 검색 정보
+     * @return 검색 게시글 조회 결과
+     */
+    List<BlogResponseDto> searchBlog(String param);
 }
